@@ -8,22 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class SurveyAnswer extends Model
 {
     use HasFactory;
-    protected $fillable = ['question_id', 'survey_id', 'answer'];
+    protected $fillable = ['electric_id', 'watt', 'pemakaian', 'user_id'];
 
-    // Relationships
-    public function question()
+    public function electric()
     {
-        return $this->belongsTo(SurveyQuestion::class);
+        return $this->belongsTo(Electric::class, 'electric_id');
     }
 
-    public function survey()
+    public function user()
     {
-        return $this->belongsTo(Survey::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
-
-    public function electrics()
-    {
-        return $this->belongsTo(Electric::class,'id');
-    }
-    
 }

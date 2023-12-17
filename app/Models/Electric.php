@@ -19,4 +19,9 @@ class Electric extends Model
     {
         return $this->belongsTo(Category::class, 'id_kategori');
     }
+
+    public function surveyAnswers()
+    {
+        return $this->hasMany(SurveyAnswer::class);
+    }
 }

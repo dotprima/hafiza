@@ -13,17 +13,15 @@ return new class extends Migration
     {
         Schema::create('survey_answers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('question_id');
-            $table->unsignedBigInteger('survey_id');
             $table->unsignedBigInteger('electric_id');
+            $table->unsignedBigInteger('user_id');
             
-            $table->text('watt');
+            $table->text('watt')->default(0);
             $table->text('pemakaian');
             $table->timestamps();
     
-            $table->foreign('question_id')->references('id')->on('survey_questions');
-            $table->foreign('survey_id')->references('id')->on('surveys');
             $table->foreign('electric_id')->references('id')->on('electrics');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

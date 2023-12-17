@@ -27,8 +27,10 @@ Route::get('/dashboard', function () {
 
 Route::get('/electric', [ElectricController::class, 'index'])->name('electric.index');
 Route::get('electric/data', [ElectricController::class, 'getData'])->name('electric.data');
+Route::get('electric/ajax/data', [ElectricController::class, 'getDataElectric'])->name('electric.getDataElectric');
 
 Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
+Route::post('/survey', [SurveyController::class, 'storeSurvey'])->name('survey.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

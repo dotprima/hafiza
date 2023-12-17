@@ -9,4 +9,9 @@ class Category extends Model
 {
     use HasFactory;
     protected $fillable = ['nama_kategori'];
+
+    public function electrics()
+    {
+        return $this->hasMany(Electric::class);
+    }
 }

@@ -9,4 +9,9 @@ class Merek extends Model
 {
     use HasFactory;
     protected $fillable = ['nama_merek'];
+
+    public function electrics()
+    {
+        return $this->hasMany(Electric::class);
+    }
 }

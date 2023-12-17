@@ -22,133 +22,142 @@
                     <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel1">Peralatan Listrik</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
+                                <form id="equipmentForm" action="{{ route('survey.store') }}" method="POST">
+                                    @csrf
 
-                                    <div class="row g-2">
-                                        <div class="col mb-0">
-                                            <label for="emailBasic" class="form-label">Kategori</label>
-                                            <select id="select2Basic1" class="select2 form-select form-select-lg"
-                                                data-allow-clear="true" name="kategori">
-                                                @foreach ($category as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->nama_kategori }}</option>
-                                                @endforeach
-                                            </select>
-
-
-
-                                        </div>
-                                        <div class="col mb-0">
-                                            <label for="dobBasic" class="form-label">Merek</label>
-                                            <select id="select2Basic2" class="select2 form-select form-select-lg"
-                                                data-allow-clear="true" name="merek">
-                                                @foreach ($merek as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->nama_merek }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel1">Peralatan Listrik</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
-                                    <div class="row">
-                                        <div class="col mb-3">
-                                            <label for="nameBasic" class="form-label">Total Pemakain Rata - Rata / Hari
-                                            </label>
-                                            <input type="number" class="form-control" name="pemakaian" id="select2Basic3">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col mb-3">
-                                            <label for="dobBasic" class="form-label">SKU</label>
-                                            <select id="select2Basic3" class="select2 form-select form-select-lg"
-                                                data-allow-clear="true" name="merek">
+                                    <div class="modal-body">
 
-                                            </select>
+                                        <div class="row g-2">
+                                            <div class="col mb-0">
+                                                <label for="emailBasic" class="form-label">Kategori</label>
+                                                <select id="select2Basic1" class="select2 form-select form-select-lg"
+                                                    data-allow-clear="true" name="kategori">
+                                                    <option>Pilih</option>
+                                                    @foreach ($category as $item)
+                                                        <option value="{{ $item->id }}">{{ $item->nama_kategori }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+
+
+                                            </div>
+                                            <div class="col mb-0">
+                                                <label for="dobBasic" class="form-label">Merek</label>
+                                                <select id="select2Basic2" class="select2 form-select form-select-lg"
+                                                    data-allow-clear="true" name="merek">
+                                                    <option>Pilih</option>
+                                                    @foreach ($merek as $item)
+                                                        <option value="{{ $item->id }}">{{ $item->nama_merek }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col mb-3">
+                                                <label for="nameBasic" class="form-label">Total Pemakain Rata - Rata / Hari
+                                                </label>
+                                                <input type="number" class="form-control" name="pemakaian" id="pemakaian">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col mb-3">
+                                                <label for="dobBasic" class="form-label">SKU</label>
+                                                <div class="position-relative">
+                                                    <select id="select2-id" class="select2 form-select form-select-lg"
+                                                        name="SKU">
+                                                        <!-- Opsi akan ditambahkan oleh JavaScript -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                     </div>
-                                    
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-label-secondary"
-                                        data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-label-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" onclick="submitForm()">Save
+                                            changes</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
 
-                    @foreach ($surveys as $item)
-                        @foreach ($item->answers as $answers)
-                            <div class="card accordion-item">
-                                <h2 class="accordion-header" id="headingDeliveryAddress">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseDeliveryAddress{{ $answers->id }}" aria-expanded="true"
-                                        aria-controls="collapseDeliveryAddress{{ $answers->id }}">
-                                        {{ $answers->electrics->category->nama_kategori }}
-                                    </button>
-                                </h2>
-                                <div id="collapseDeliveryAddress{{ $answers->id }}" class="accordion-collapse collapse"
-                                    aria-labelledby="headingDeliveryAddress" data-bs-parent="#collapsibleSection">
-                                    <div class="accordion-body">
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <label class="col-sm-3 col-form-label text-sm-end"
-                                                        for="collapsible-fullname">Merek</label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" name="merek" class="form-control"
-                                                            value="{{ $answers->electrics->nama_electric }}" />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <label class="col-sm-3 col-form-label text-sm-end"
-                                                        for="collapsible-fullname">SKU</label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" name="merek" class="form-control"
-                                                            value="{{ $answers->electrics->tipe_electric }}" />
-                                                    </div>
+                    @foreach ($surveys as $survey)
+                        <div class="card accordion-item">
+                            <h2 class="accordion-header" id="headingDeliveryAddress">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseDeliveryAddress{{ $survey->id }}" aria-expanded="true"
+                                    aria-controls="collapseDeliveryAddress{{ $survey->id }}">
+                                    {{ optional(optional($survey->electric)->category)->nama_kategori }}
+                                </button>
+                            </h2>
+                            <div id="collapseDeliveryAddress{{ $survey->id }}" class="accordion-collapse collapse"
+                                aria-labelledby="headingDeliveryAddress" data-bs-parent="#collapsibleSection">
+                                <div class="accordion-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label text-sm-end"
+                                                    for="collapsible-fullname">Merek</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="merek" class="form-control"
+                                                        value="{{ optional($survey->electric)->nama_electric }}" />
                                                 </div>
                                             </div>
                                         </div>
-                                        <br>
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <label class="col-sm-3 col-form-label text-sm-end"
-                                                        for="collapsible-fullname">Watt</label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" name="merek" class="form-control"
-                                                            value="{{ $answers->watt }}" />
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <label class="col-sm-3 col-form-label text-sm-end"
-                                                        for="collapsible-fullname">Lama Pekaian / Hari</label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" name="merek" class="form-control"
-                                                            value="{{ $answers->pemakaian }}" />
-                                                    </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label text-sm-end"
+                                                    for="collapsible-fullname">SKU</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="merek" class="form-control"
+                                                        value="{{ optional($survey->electric)->tipe_electric }} }}" />
                                                 </div>
                                             </div>
                                         </div>
-                                        <button class="dt-button create-new btn btn-primary" tabindex="0"
-                                            aria-controls="DataTables_Table_0" type="button"><span><i
-                                                    class="ti ti-plus me-sm-1"></i> <span
-                                                    class="d-none d-sm-inline-block">Update Data
-                                                    {{ $answers->electrics->category->nama_kategori }}
-                                                </span></span></button>
                                     </div>
+                                    <br>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label text-sm-end"
+                                                    for="collapsible-fullname">Watt</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="merek" class="form-control"
+                                                        value="{{ $survey->watt }}" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label text-sm-end"
+                                                    for="collapsible-fullname">Lama Pekaian / Hari</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="pemakaian" class="form-control"
+                                                        value="{{ $survey->pemakaian }}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="dt-button create-new btn btn-primary" tabindex="0"
+                                        aria-controls="DataTables_Table_0" type="button"><span><i
+                                                class="ti ti-plus me-sm-1"></i> <span
+                                                class="d-none d-sm-inline-block">Update Data
+                                                {{ optional(optional($survey->electric)->category)->nama_kategori }}
+                                            </span></span></button>
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
                     @endforeach
 
 
@@ -162,10 +171,12 @@
 
 @section('css')
     <link rel="stylesheet" href="../../assets/vendor/libs/select2/select2.css" />
+    <link rel="stylesheet" href="../../assets/vendor/libs/sweetalert2/sweetalert2.css" />
 @endsection
 
 @section('script')
     <script src="../../assets/vendor/libs/select2/select2.js"></script>
+    <script src="../../assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
     <script>
         "use strict";
         $(function() {
@@ -180,9 +191,11 @@
                 var e = $(this);
                 e.wrap('<div class="position-relative"></div>').select2({
                     placeholder: "Select value",
+                    tags: true,
                     dropdownParent: e.parent()
                 })
             }), n.length && n.wrap('<div class="position-relative"></div>').select2({
+                tags: true,
                 dropdownParent: n.parent(),
                 templateResult: i,
                 templateSelection: i,
@@ -196,43 +209,62 @@
         $(document).ready(function() {
             var kategori, merek, pemakaian, sku;
 
-            // Function to update SKU options
+
+
             function updateSkuOptions() {
-                // Make an AJAX request to fetch SKU options based on selected kategori and merek
+                // Panggil AJAX untuk mendapatkan data
                 $.ajax({
-                    type: 'GET',
-                    url: '/get-sku-options', // Replace with your actual route to fetch SKU options
+                    url: '{{ route('electric.getDataElectric') }}',
                     data: {
                         kategori: kategori,
                         merek: merek
                     },
-                    success: function(data) {
-                        // Example: Assuming the server returns SKU options in data.skuOptions
-                        var skuOptions = data.skuOptions;
+                    dataType: 'json',
+                    success: function(response) {
+                        // Handle response dari server
+                        var select2Options = $('#select2-id'); // Gantilah dengan ID Select2 yang sesuai
 
-                        // Clear existing options and add new SKU options to the select2 dropdown
-                        $('#select2SKU').empty().select2({
-                            data: skuOptions
-                        });
+                        // Hapus semua opsi sebelum menambahkan yang baru
+                        select2Options.empty();
+
+                        // Tambahkan opsi berdasarkan data dari server
+                        if (response.status === 'success') {
+                            $.each(response.data, function(index, item) {
+                                select2Options.append($('<option>', {
+                                    value: item.id,
+                                    text: item.nama_electric
+                                }));
+                            });
+                        } else {
+                            // Jika data tidak tersedia, tambahkan opsi "New Option"
+                            select2Options.append($('<option>', {
+                                value: 'new-option',
+                                text: 'New Option'
+                            }));
+                        }
+
+                        // Trigger event change untuk Select2 agar memperbarui tampilan
+                        select2Options.trigger('change');
                     },
-                    error: function(error) {
-                        console.error('Error fetching SKU options:', error);
+                    error: function() {
+                        // Handle jika terjadi error pada saat melakukan AJAX request
+                        console.error('Error connecting to the server');
                     }
                 });
             }
 
             // Capture the data when any of the input fields change
-            $('#select2Basic1, #select2Basic2, #select2Basic3').change(function() {
+            $('#select2Basic1, #select2Basic2, #pemakaian').change(function() {
                 // Get the values from the form
                 kategori = $('#select2Basic1').val()
                 merek = $('#select2Basic2').val()
-                pemakaian = $('#nameBasic1').val();
-                console.log('sd');
+                pemakaian = $('#pemakaian').val();
+
                 // Check if all three fields have values
-                if (kategori && merek && pemakaian) {
+                if (kategori !== "Pilih" && merek !== "Pilih" && pemakaian !== '') {
                     // Enable or show the "Save changes" button
                     $('#saveChangesBtn').prop('disabled', false);
-                    console.log('asd');
+
                     // Update SKU options based on selected kategori and merek
                     updateSkuOptions();
                 } else {
@@ -241,48 +273,43 @@
                 }
             });
 
-            // Capture the click event for the "Save changes" button
-            $('#saveChangesBtn').click(function() {
-                // Create an object with the data
-                var formData = {
-                    'kategori': kategori,
-                    'merek': merek,
-                    'pemakaian': pemakaian,
-                    'sku': $('#select2SKU').val() // Add SKU to the formData
-                };
 
-                // Make an AJAX request to post the data to the server
-                $.ajax({
-                    type: 'POST',
-                    url: '/your-submit-route', // Replace with your actual route
-                    data: formData,
-                    success: function(data) {
-                        // Handle the success response
-
-                        // Example: Assuming the server returns new options for select2
-                        var newOptions = data.newOptions;
-
-                        // Add new options to the select2 dropdowns
-                        $('#select2Basic2').empty().select2({
-                            data: newOptions.kategori
-                        });
-
-                        $('#select2Basic').empty().select2({
-                            data: newOptions.merek
-                        });
-
-                        // Update SKU options based on selected kategori and merek
-                        updateSkuOptions();
-
-                        // You can also close the modal or perform other actions here
-                        console.log('Data submitted successfully:', data);
-                    },
-                    error: function(error) {
-                        // Handle the error response
-                        console.error('Error submitting data:', error);
-                    }
-                });
-            });
         });
+    </script>
+
+    <script>
+        function submitForm() {
+            // Serialize the form data
+            var formData = $('#equipmentForm').serialize();
+
+            // Make an AJAX POST request
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('survey.store') }}",
+                data: formData,
+                success: function(data) {
+                    // Handle success, e.g., close the modal or show a success message
+                    $('#myModal').modal('hide');
+                    // Add any additional logic based on your requirements
+                    // Show SweetAlert success notification
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Survey answer created successfully!',
+                    }).then(function() {
+                        // Reload the page
+                        location.reload();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors, e.g., show an error message
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while submitting the survey answer.',
+                    });
+                }
+            });
+        }
     </script>
 @endsection
