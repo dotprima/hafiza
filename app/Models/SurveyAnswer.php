@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SurveyAnswer extends Model
 {
     use HasFactory;
-    protected $fillable = ['electric_id', 'watt', 'pemakaian', 'user_id'];
+    protected $fillable = ['electric_id', 'pemakaian', 'user_id'];
 
     public function electric()
     {

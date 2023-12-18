@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama_electric');
             $table->unsignedBigInteger('id_merek');
             $table->unsignedBigInteger('id_kategori');
-            $table->string('tipe_electric')->nullable();
+            $table->text('watt')->default(0);
             $table->timestamps();
 
             // Definisi foreign keys

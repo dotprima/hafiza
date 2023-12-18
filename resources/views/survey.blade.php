@@ -2,12 +2,12 @@
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Forms/</span> Horizontal Layouts</h4>
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Survey Peralatan Listrik</h4>
 
         <!-- Collapsible Section -->
         <div class="row my-4">
             <div class="col">
-                <h6>Collapsible Section</h6>
+                <h6></h6>
                 <div class="accordion" id="collapsibleSection">
                     <!-- Delivery Address -->
                     <div class="text-end">
@@ -109,7 +109,7 @@
                                                     for="collapsible-fullname">Merek</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" name="merek" class="form-control"
-                                                        value="{{ optional($survey->electric)->nama_electric }}" />
+                                                        value="{{ optional($survey->electric)->nama_electric }}" readonly />
                                                 </div>
                                             </div>
                                         </div>
@@ -120,7 +120,7 @@
                                                     for="collapsible-fullname">SKU</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" name="merek" class="form-control"
-                                                        value="{{ optional($survey->electric)->tipe_electric }} }}" />
+                                                        value="{{ optional($survey->electric)->nama_electric }}" readonly />
                                                 </div>
                                             </div>
                                         </div>
@@ -133,7 +133,7 @@
                                                     for="collapsible-fullname">Watt</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" name="merek" class="form-control"
-                                                        value="{{ $survey->watt }}" />
+                                                        value="{{ optional($survey->electric)->watt }}" readonly />
                                                 </div>
                                             </div>
                                         </div>
@@ -144,17 +144,23 @@
                                                     for="collapsible-fullname">Lama Pekaian / Hari</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" name="pemakaian" class="form-control"
-                                                        value="{{ $survey->pemakaian }}" />
+                                                        value="{{ $survey->pemakaian }}" readonly />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <button class="dt-button create-new btn btn-primary" tabindex="0"
-                                        aria-controls="DataTables_Table_0" type="button"><span><i
-                                                class="ti ti-plus me-sm-1"></i> <span
-                                                class="d-none d-sm-inline-block">Update Data
-                                                {{ optional(optional($survey->electric)->category)->nama_kategori }}
-                                            </span></span></button>
+                                    <br>
+                                    <form id="deleteForm" action="{{ route('survey.delete', ['id' => $survey->id]) }}"
+                                        method="post">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="button" class="dt-button create-new btn btn-danger"
+                                            onclick="confirmDelete()">
+                                            <i class="ti ti-plus me-sm-1"></i> Hapus
+                                            {{ optional(optional($survey->electric)->category)->nama_kategori }}
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -276,7 +282,33 @@
 
         });
     </script>
+    <script>
+        function confirmDelete() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this survey!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form when confirmed
+                    document.getElementById('deleteForm').submit();
+                }
+            });
+        }
 
+        // Display success or error messages from the session
+        @if (session('success'))
+            Swal.fire('Success', '{{ session('success') }}', 'success');
+        @endif
+
+        @if (session('error'))
+            Swal.fire('Error', '{{ session('error') }}', 'error');
+        @endif
+    </script>
     <script>
         function submitForm() {
             // Serialize the form data
@@ -301,13 +333,30 @@
                         location.reload();
                     });
                 },
-                error: function(xhr, status, error) {
+                error: function(xhr) {
                     // Handle errors, e.g., show an error message
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'An error occurred while submitting the survey answer.',
-                    });
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        // Display validation errors
+                        var errorMessages = xhr.responseJSON.errors;
+                        var errorMessageString = '';
+
+                        $.each(errorMessages, function(key, value) {
+                            errorMessageString += value[0] + '<br>';
+                        });
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            html: errorMessageString,
+                        });
+                    } else {
+                        // Generic error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while submitting the survey answer.',
+                        });
+                    }
                 }
             });
         }

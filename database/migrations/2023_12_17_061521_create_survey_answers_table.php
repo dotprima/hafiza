@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('electric_id');
             $table->unsignedBigInteger('user_id');
-            
-            $table->text('watt')->default(0);
+
             $table->text('pemakaian');
             $table->timestamps();
     

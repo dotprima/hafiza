@@ -28,8 +28,8 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboards -->
-        <li class="menu-item">
-            <a href="{{route('dashboard')}}" class="menu-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <a href="{{route('dashboard')}}" class="menu-link ">
                 <i class="menu-icon tf-icons ti ti-mail"></i>
                 <div>Dashboard</div>
             </a>
@@ -41,14 +41,14 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Apps &amp; Pages</span>
         </li>
-        <li class="menu-item">
-            <a href="{{route('electric.index')}}" class="menu-link {{ request()->routeIs('electric.index') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->routeIs('electric.index') ? 'active' : '' }}">
+            <a href="{{route('electric.index')}}" class="menu-link ">
                 <i class="menu-icon tf-icons ti ti-mail"></i>
                 <div>Electic</div>
             </a>
         </li>
-        <li class="menu-item">
-            <a href="{{route('survey.index')}}" class="menu-link {{ request()->routeIs('survey.index') ? 'active' : '' }}">
+        <li class="menu-item  {{ request()->routeIs('survey.index') ? 'active' : '' }}">
+            <a href="{{route('survey.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-messages"></i>
                 <div>Survey</div>
             </a>

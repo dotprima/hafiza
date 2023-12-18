@@ -16,14 +16,12 @@ class ElectricSeeder extends Seeder
             'nama_electric' => 'Smart TV 55"',
             'id_merek' => 1, // ID merek sesuai dengan yang telah di-seed pada MerekSeeder
             'id_kategori' => 1, // ID kategori sesuai dengan yang telah di-seed pada CategorySeeder
-            'tipe_electric' => 'LED'
         ]);
 
         Electric::create([
             'nama_electric' => 'Table Lamp',
             'id_merek' => 2,
             'id_kategori' => 2,
-            'tipe_electric' => 'Desk Lamp'
         ]);
 
         // Tambahkan data electric lain sesuai kebutuhan

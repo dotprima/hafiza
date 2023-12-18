@@ -14,75 +14,112 @@
                             <th>Type</th>
                             <th>Merek</th>
                             <th>Kategori</th>
-                            <th>SKU</th>
-                            <th>Date</th>
-                            <th>Salary</th>
+                            <th>Watt</th>
+                            <th>Created At</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                 </table>
             </div>
         </div>
-        <!-- Modal to add new record -->
-        <div class="offcanvas offcanvas-end" id="add-new-record">
-            <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title" id="exampleModalLabel">New Record</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body flex-grow-1">
-                <form class="add-new-record pt-0 row g-2" id="form-add-new-record" onsubmit="return false">
-                    <div class="col-sm-12">
-                        <label class="form-label" for="basicFullname">Full Name</label>
-                        <div class="input-group input-group-merge">
-                            <span id="basicFullname2" class="input-group-text"><i class="ti ti-user"></i></span>
-                            <input type="text" id="basicFullname" class="form-control dt-full-name" name="basicFullname"
-                                placeholder="John Doe" aria-label="John Doe" aria-describedby="basicFullname2" />
-                        </div>
+
+
+
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="equipmentForm" action="{{ route('survey.store') }}" method="POST">
+                    @csrf
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel1">Peralatan Listrik</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="col-sm-12">
-                        <label class="form-label" for="basicPost">Post</label>
-                        <div class="input-group input-group-merge">
-                            <span id="basicPost2" class="input-group-text"><i class="ti ti-briefcase"></i></span>
-                            <input type="text" id="basicPost" name="basicPost" class="form-control dt-post"
-                                placeholder="Web Developer" aria-label="Web Developer" aria-describedby="basicPost2" />
+                    <div class="modal-body">
+
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="emailBasic" class="form-label">Kategori</label>
+                                <select id="select2Basic1" class="select2 form-select form-select-lg"
+                                    data-allow-clear="true" name="kategori">
+                                    <option>Pilih</option>
+                                    @foreach ($category as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama_kategori }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+
+
+                            </div>
+                            <div class="col mb-0">
+                                <label for="dobBasic" class="form-label">Merek</label>
+                                <select id="select2Basic2" class="select2 form-select form-select-lg"
+                                    data-allow-clear="true" name="merek">
+                                    <option>Pilih</option>
+                                    @foreach ($merek as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama_merek }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <label class="form-label" for="basicEmail">Email</label>
-                        <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i class="ti ti-mail"></i></span>
-                            <input type="text" id="basicEmail" name="basicEmail" class="form-control dt-email"
-                                placeholder="john.doe@example.com" aria-label="john.doe@example.com" />
+
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="dobBasic" class="form-label">SKU</label>
+                                <div class="position-relative">
+                                    <input type="text" class="form-control" name="SKU">
+
+                                    </input>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-text">You can use letters, numbers & periods</div>
+
+
                     </div>
-                    <div class="col-sm-12">
-                        <label class="form-label" for="basicDate">Joining Date</label>
-                        <div class="input-group input-group-merge">
-                            <span id="basicDate2" class="input-group-text"><i class="ti ti-calendar"></i></span>
-                            <input type="text" class="form-control dt-date" id="basicDate" name="basicDate"
-                                aria-describedby="basicDate2" placeholder="MM/DD/YYYY" aria-label="MM/DD/YYYY" />
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <label class="form-label" for="basicSalary">Salary</label>
-                        <div class="input-group input-group-merge">
-                            <span id="basicSalary2" class="input-group-text"><i class="ti ti-currency-dollar"></i></span>
-                            <input type="number" id="basicSalary" name="basicSalary" class="form-control dt-salary"
-                                placeholder="12000" aria-label="12000" aria-describedby="basicSalary2" />
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <button type="submit" class="btn btn-primary data-submit me-sm-3 me-1">Submit</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="submitForm()">Save
+                            changes</button>
                     </div>
                 </form>
             </div>
         </div>
-        <!--/ DataTable with Buttons -->
+    </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="editWattForm" action="{{ route('survey.edit.watt') }}" method="POST">
+                    @csrf
 
-
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel1">Peralatan Listrik</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="dobBasic" class="form-label">Watt</label>
+                                <div class="position-relative">
+                                    <input type="hidden" class="form-control" name="id" id="idedit">
+                                    <input type="text" class="form-control" name="watt" id="wattedit">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveChangesBtn">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -111,6 +148,8 @@
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
+    <link rel="stylesheet" href="../../assets/vendor/libs/select2/select2.css" />
+    <link rel="stylesheet" href="../../assets/vendor/libs/sweetalert2/sweetalert2.css" />
 @endsection
 
 @section('script')
@@ -139,8 +178,78 @@
 
     <!-- Main JS -->
     <script src="../../assets/js/main.js"></script>
-
+    <script src="../../assets/vendor/libs/select2/select2.js"></script>
+    <script src="../../assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
     <!-- Page JS -->
+    <script>
+        $(document).ready(function() {
+            // Capture click event on the 'Save changes' button
+            $('#saveChangesBtn').on('click', function() {
+                // Prepare the data to be sent
+                var formData = {
+                    _token: '{{ csrf_token() }}',
+                    id: $('#idedit').val(),
+                    watt: $('#wattedit').val()
+                };
+
+                // Perform the AJAX request
+                $.ajax({
+                    url: '{{ route('survey.edit.watt') }}',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Survey answer created successfully!',
+                        }).then(function() {
+                            $('.datatables-basic').DataTable().ajax.reload();
+                            // Close the modal or perform any other actions
+                            $('#editModal').modal('hide');
+                        });
+
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Capture click event on the 'Info' button
+            $('body').on('click', '.btn-info', function() {
+                // Get the electric ID from the data attribute
+                var electricId = $(this).data('electric-id');
+
+                // Perform your AJAX request with the electricId
+                // You can use the electricId variable in your AJAX data
+                $.ajax({
+                    url: '/electric/' + electricId,
+                    type: 'POST',
+                    data: {
+                        electric_id: electricId,
+                        _token: '{{ csrf_token() }}', // Add the CSRF token
+                    },
+                    success: function(response) {
+
+
+                        // Set the value of the input field with the watt value from the response
+                        $('#wattedit').val(response.electric.watt);
+                        $('#idedit').val(response.electric.id);
+
+
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
     <script>
         $(function() {
             var dt_basic_table = $('.datatables-basic'),
@@ -171,17 +280,18 @@
                             data: 'category_nama',
                             name: 'category.nama_kategori'
                         },
+
                         {
-                            data: 'tipe_electric',
-                            name: 'tipe_electric'
+                            data: 'watt',
+                            name: 'watt'
                         },
                         {
                             data: 'created_at',
-                            name: 'created_at'
-                        },
-                        {
-                            data: 'updated_at',
-                            name: 'updated_at'
+                            name: 'created_at',
+                            render: function(data, type, row) {
+                                // Format the 'created_at' timestamp to 'DD MMMM YYYY'
+                                return moment(data).format('DD MMMM YYYY');
+                            }
                         },
                         {
                             data: 'action',
@@ -191,185 +301,20 @@
                         },
                     ],
                     order: [
-                        [2, 'desc']
+                        [6, 'desc']
                     ],
                     dom: '<"card-header flex-column flex-md-row"<"head-label text-center"><"dt-action-buttons text-end pt-3 pt-md-0"B>><"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-                    displayLength: 7,
-                    lengthMenu: [7, 10, 25, 50, 75, 100],
+                    displayLength: 10,
+                    lengthMenu: [10, 25, 50, 75, 100],
                     buttons: [{
-                            extend: 'collection',
-                            className: 'btn btn-label-primary dropdown-toggle me-2',
-                            text: '<i class="ti ti-file-export me-sm-1"></i> <span class="d-none d-sm-inline-block">Export</span>',
-                            buttons: [{
-                                    extend: 'print',
-                                    text: '<i class="ti ti-printer me-1" ></i>Print',
-                                    className: 'dropdown-item',
-                                    exportOptions: {
-                                        columns: [3, 4, 5, 6, 7],
-                                        // prevent avatar to be display
-                                        format: {
-                                            body: function(inner, coldex, rowdex) {
-                                                if (inner.length <= 0) return inner;
-                                                var el = $.parseHTML(inner);
-                                                var result = '';
-                                                $.each(el, function(index, item) {
-                                                    if (item.classList !== undefined &&
-                                                        item.classList.contains(
-                                                            'user-name')) {
-                                                        result = result + item.lastChild
-                                                            .firstChild.textContent;
-                                                    } else if (item.innerText ===
-                                                        undefined) {
-                                                        result = result + item
-                                                            .textContent;
-                                                    } else result = result + item
-                                                        .innerText;
-                                                });
-                                                return result;
-                                            }
-                                        }
-                                    },
-                                    customize: function(win) {
-                                        //customize print view for dark
-                                        $(win.document.body)
-                                            .css('color', config.colors.headingColor)
-                                            .css('border-color', config.colors.borderColor)
-                                            .css('background-color', config.colors.bodyBg);
-                                        $(win.document.body)
-                                            .find('table')
-                                            .addClass('compact')
-                                            .css('color', 'inherit')
-                                            .css('border-color', 'inherit')
-                                            .css('background-color', 'inherit');
-                                    }
-                                },
-                                {
-                                    extend: 'csv',
-                                    text: '<i class="ti ti-file-text me-1" ></i>Csv',
-                                    className: 'dropdown-item',
-                                    exportOptions: {
-                                        columns: [3, 4, 5, 6, 7],
-                                        // prevent avatar to be display
-                                        format: {
-                                            body: function(inner, coldex, rowdex) {
-                                                if (inner.length <= 0) return inner;
-                                                var el = $.parseHTML(inner);
-                                                var result = '';
-                                                $.each(el, function(index, item) {
-                                                    if (item.classList !== undefined &&
-                                                        item.classList.contains(
-                                                            'user-name')) {
-                                                        result = result + item.lastChild
-                                                            .firstChild.textContent;
-                                                    } else if (item.innerText ===
-                                                        undefined) {
-                                                        result = result + item
-                                                            .textContent;
-                                                    } else result = result + item
-                                                        .innerText;
-                                                });
-                                                return result;
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    extend: 'excel',
-                                    text: 'Excel',
-                                    className: 'dropdown-item',
-                                    exportOptions: {
-                                        columns: [3, 4, 5, 6, 7],
-                                        // prevent avatar to be display
-                                        format: {
-                                            body: function(inner, coldex, rowdex) {
-                                                if (inner.length <= 0) return inner;
-                                                var el = $.parseHTML(inner);
-                                                var result = '';
-                                                $.each(el, function(index, item) {
-                                                    if (item.classList !== undefined &&
-                                                        item.classList.contains(
-                                                            'user-name')) {
-                                                        result = result + item.lastChild
-                                                            .firstChild.textContent;
-                                                    } else if (item.innerText ===
-                                                        undefined) {
-                                                        result = result + item
-                                                            .textContent;
-                                                    } else result = result + item
-                                                        .innerText;
-                                                });
-                                                return result;
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    extend: 'pdf',
-                                    text: '<i class="ti ti-file-description me-1"></i>Pdf',
-                                    className: 'dropdown-item',
-                                    exportOptions: {
-                                        columns: [3, 4, 5, 6, 7],
-                                        // prevent avatar to be display
-                                        format: {
-                                            body: function(inner, coldex, rowdex) {
-                                                if (inner.length <= 0) return inner;
-                                                var el = $.parseHTML(inner);
-                                                var result = '';
-                                                $.each(el, function(index, item) {
-                                                    if (item.classList !== undefined &&
-                                                        item.classList.contains(
-                                                            'user-name')) {
-                                                        result = result + item.lastChild
-                                                            .firstChild.textContent;
-                                                    } else if (item.innerText ===
-                                                        undefined) {
-                                                        result = result + item
-                                                            .textContent;
-                                                    } else result = result + item
-                                                        .innerText;
-                                                });
-                                                return result;
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    extend: 'copy',
-                                    text: '<i class="ti ti-copy me-1" ></i>Copy',
-                                    className: 'dropdown-item',
-                                    exportOptions: {
-                                        columns: [3, 4, 5, 6, 7],
-                                        // prevent avatar to be display
-                                        format: {
-                                            body: function(inner, coldex, rowdex) {
-                                                if (inner.length <= 0) return inner;
-                                                var el = $.parseHTML(inner);
-                                                var result = '';
-                                                $.each(el, function(index, item) {
-                                                    if (item.classList !== undefined &&
-                                                        item.classList.contains(
-                                                            'user-name')) {
-                                                        result = result + item.lastChild
-                                                            .firstChild.textContent;
-                                                    } else if (item.innerText ===
-                                                        undefined) {
-                                                        result = result + item
-                                                            .textContent;
-                                                    } else result = result + item
-                                                        .innerText;
-                                                });
-                                                return result;
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            text: '<i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Add New Record</span>',
-                            className: 'create-new btn btn-primary'
+                        text: '<i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Tambah Peralatan Listrik</span>',
+                        className: 'create-new btn btn-primary',
+                        action: function() {
+                            // Open the modal when the button is clicked
+                            $('#basicModal').modal('show');
                         }
-                    ],
+                    }],
+
                     responsive: {
                         details: {
                             display: $.fn.dataTable.Responsive.display.modal({
@@ -410,5 +355,155 @@
 
 
         });
+    </script>
+
+    <script>
+        "use strict";
+        $(function() {
+            var e = $(".selectpicker"),
+                t = $(".select2"),
+                n = $(".select2-icons");
+
+            function i(e) {
+                return e.id ? "<i class='" + $(e.element).data("icon") + " me-2'></i>" + e.text : e.text
+            }
+            e.length && e.selectpicker(), t.length && t.each(function() {
+                var e = $(this);
+                e.wrap('<div class="position-relative"></div>').select2({
+                    placeholder: "Select value",
+                    tags: true,
+                    dropdownParent: e.parent()
+                })
+            }), n.length && n.wrap('<div class="position-relative"></div>').select2({
+                tags: true,
+                dropdownParent: n.parent(),
+                templateResult: i,
+                templateSelection: i,
+                escapeMarkup: function(e) {
+                    return e
+                }
+            })
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            var kategori, merek, pemakaian, sku;
+
+
+
+            function updateSkuOptions() {
+                // Panggil AJAX untuk mendapatkan data
+                $.ajax({
+                    url: '{{ route('electric.getDataElectric') }}',
+                    data: {
+                        kategori: kategori,
+                        merek: merek
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        // Handle response dari server
+                        var select2Options = $('#select2-id'); // Gantilah dengan ID Select2 yang sesuai
+
+                        // Hapus semua opsi sebelum menambahkan yang baru
+                        select2Options.empty();
+
+                        // Tambahkan opsi berdasarkan data dari server
+                        if (response.status === 'success') {
+                            $.each(response.data, function(index, item) {
+                                select2Options.append($('<option>', {
+                                    value: item.id,
+                                    text: item.nama_electric
+                                }));
+                            });
+                        } else {
+                            // Jika data tidak tersedia, tambahkan opsi "New Option"
+                            select2Options.append($('<option>', {
+                                value: 'new-option',
+                                text: 'New Option'
+                            }));
+                        }
+
+                        // Trigger event change untuk Select2 agar memperbarui tampilan
+                        select2Options.trigger('change');
+                    },
+                    error: function() {
+                        // Handle jika terjadi error pada saat melakukan AJAX request
+                        console.error('Error connecting to the server');
+                    }
+                });
+            }
+
+            // Capture the data when any of the input fields change
+            $('#select2Basic1, #select2Basic2, #pemakaian').change(function() {
+                // Get the values from the form
+                kategori = $('#select2Basic1').val()
+                merek = $('#select2Basic2').val()
+                pemakaian = $('#pemakaian').val();
+
+                // Check if all three fields have values
+                if (kategori !== "Pilih" && merek !== "Pilih" && pemakaian !== '') {
+                    // Enable or show the "Save changes" button
+                    $('#saveChangesBtn').prop('disabled', false);
+
+                    // Update SKU options based on selected kategori and merek
+                    updateSkuOptions();
+                } else {
+                    // Disable or hide the "Save changes" button
+                    $('#saveChangesBtn').prop('disabled', true);
+                }
+            });
+
+
+        });
+    </script>
+
+    <script>
+        function submitForm() {
+            // Serialize the form data
+            var formData = $('#equipmentForm').serialize();
+
+            // Make an AJAX POST request
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('electric.store') }}",
+                data: formData,
+                success: function(data) {
+
+                    // Show SweetAlert success notification
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Survey answer created successfully!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    // Handle errors, e.g., show an error message
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        // Display validation errors
+                        var errorMessages = xhr.responseJSON.errors;
+                        var errorMessageString = '';
+
+                        $.each(errorMessages, function(key, value) {
+                            errorMessageString += value[0] + '<br>';
+                        });
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            html: errorMessageString,
+                        });
+                    } else {
+                        // Generic error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while submitting the survey answer.',
+                        });
+                    }
+                }
+            });
+        }
     </script>
 @endsection
