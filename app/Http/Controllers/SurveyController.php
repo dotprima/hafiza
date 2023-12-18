@@ -51,22 +51,38 @@ class SurveyController extends Controller
             DB::beginTransaction();
 
             try {
-                // Step 1: Insert data into 'mereks' table
-                $merekId = DB::table('mereks')->insertGetId([
-                    'nama_merek' => ucwords($request->merek),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                // Step 1: Check if data already exists in 'mereks' table
+                $merek = DB::table('mereks')->where('id', ucwords($request->merek))->first();
 
-                // Step 2: Insert data into 'categories' table
-                $kategoriId = DB::table('categories')->insertGetId([
-                    'nama_kategori' => ucwords($request->kategori),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                if (!$merek) {
+                    // If not exists, insert data
+                    $merekId = DB::table('mereks')->insertGetId([
+                        'nama_merek' => ucwords($request->merek),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                } else {
+                    // If exists, use existing ID
+                    $merekId = $merek->id;
+                }
+
+                // Step 2: Check if data already exists in 'categories' table
+                $kategori = DB::table('categories')->where('id', ucwords($request->kategori))->first();
+
+                if (!$kategori) {
+                    // If not exists, insert data
+                    $kategoriId = DB::table('categories')->insertGetId([
+                        'nama_kategori' => ucwords($request->kategori),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                } else {
+                    // If exists, use existing ID
+                    $kategoriId = $kategori->id;
+                }
 
                 // Step 3: Insert data into 'electrics' table
-                $electrciId = DB::table('electrics')->insert([
+                $electrciId = DB::table('electrics')->insertGetId([
                     'nama_electric' => ucwords($request->SKU),
                     'id_merek' => $merekId,
                     'id_kategori' => $kategoriId,
@@ -74,6 +90,9 @@ class SurveyController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+                
+
+            
 
                 DB::table('survey_answers')->insert([
                     'electric_id' => $electrciId,
