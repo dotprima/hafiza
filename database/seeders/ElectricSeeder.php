@@ -13,7 +13,7 @@ class ElectricSeeder extends Seeder
     public function run()
     {
         Electric::create([
-            'nama_electric' => 'Smart TV 55"',
+            'nama_electric' => 'Smart TV 55',
             'id_merek' => 1, // ID merek sesuai dengan yang telah di-seed pada MerekSeeder
             'id_kategori' => 1, // ID kategori sesuai dengan yang telah di-seed pada CategorySeeder
         ]);
