@@ -58,6 +58,9 @@ class ProfileController extends Controller
             'total_watt' => $totalWatt,
             'email' => $request->input('email'),
             'tarif' => $tarif,
+            'age' => $request->input('age'),
+            'gender' => $request->input('gender'),
+            'monthly_income' => $request->input('monthly_income'),
         ];
         
 

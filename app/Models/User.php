@@ -27,7 +27,10 @@ class User extends Authenticatable
         'kota',
         'kecamatan',
         'desa',
-        'tarif'
+        'tarif',
+        'age',
+        'gender',
+        'monthly_income',
     ];
 
     /**

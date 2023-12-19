@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('total_watt')->nullable();
             $table->string('tarif')->nullable();
             $table->string('email')->unique();
+            $table->string('age')->nullable();
+            $table->enum('gender', ['Laki-Laki', 'Perempuan'])->nullable();
+            $table->string('monthly_income')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('provinsi')->nullable();
             $table->string('kota')->nullable();

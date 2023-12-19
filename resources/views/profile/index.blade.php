@@ -45,7 +45,7 @@
                                             5,500 VA (R-2/TR - Konsumen rumah tangga menengah)</option>
                                         <option value="6600" {{ $user->total_watt == 6600 ? 'selected' : '' }}>6,600 VA ke
                                             atas (R-3/TR - Konsumen rumah tangga besar)</option>
-                                     
+
                                     </select>
                                 </div>
 
@@ -56,6 +56,53 @@
                                     <input class="form-control" type="text" id="email" name="email"
                                         value="{{ $user->email }}" placeholder="{{ $user->email }}" />
                                 </div>
+
+                                <!-- Input Umur -->
+                                <div class="mb-3 col-md-6">
+                                    <label for="age" class="form-label">Umur</label>
+                                    <select class="select2 form-select" name="age">
+                                        <option value="15-24" {{ $user->age == '15-24' ? 'selected' : '' }}>15-24 Tahun
+                                        </option>
+                                        <option value="25-34" {{ $user->age == '25-34' ? 'selected' : '' }}>25-34 Tahun
+                                        </option>
+                                        
+                                    </select>
+                                </div>
+
+                                <!-- Input Gender -->
+                                <div class="mb-3 col-md-6">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="select2 form-select" name="gender">
+                                        <option value="Laki-Laki" {{ $user->gender == 'Laki-Laki' ? 'selected' : '' }}>
+                                            Laki-Laki</option>
+                                        <option value="Perempuan" {{ $user->gender == 'Perempuan' ? 'selected' : '' }}>
+                                            Perempuan</option>
+                                        
+                                    </select>
+                                </div>
+
+                                <!-- Input Pendapatan Perbulan -->
+                                <div class="mb-3 col-md-6">
+                                    <label for="monthly_income" class="form-label">Pendapatan Perbulan</label>
+                                    <select class="select2 form-select" name="monthly_income">
+                                        <option value="Kurang Dari Rp 1.000.001"
+                                            {{ $user->monthly_income == 'Kurang Dari Rp 1.000.001' ? 'selected' : '' }}>
+                                            Kurang Dari Rp 1.000.001</option>
+                                        <option value="Rp 1.000.001 - Rp 2.000.000"
+                                            {{ $user->monthly_income == 'Rp 1.000.001 - Rp 2.000.000' ? 'selected' : '' }}>
+                                            Rp 1.000.001 S/D Rp 2.000.000</option>
+                                        <option value="Rp 2.000.001 - Rp 3.000.000"
+                                            {{ $user->monthly_income == 'Rp 2.000.001 - Rp 3.000.000' ? 'selected' : '' }}>
+                                            Rp 2.000.001 S/D Rp 3.000.000</option>
+                                        <option value="Rp 3.000.001 - Rp 4.000.000"
+                                            {{ $user->monthly_income == 'Rp 3.000.001 - Rp 4.000.000' ? 'selected' : '' }}>
+                                            Rp 3.000.001 S/D Rp 4.000.000</option>
+                                        <option value="Lebih Dari Rp 4.000.000"
+                                            {{ $user->monthly_income == 'Lebih Dari Rp 4.000.000' ? 'selected' : '' }}>
+                                            Lebih Dari Rp 4.000.000</option>
+                                    </select>
+                                </div>
+
 
                                 <!-- Dropdown Provinsi -->
                                 <div class="mb-3 col-md-6">
