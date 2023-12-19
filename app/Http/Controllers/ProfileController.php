@@ -61,6 +61,8 @@ class ProfileController extends Controller
             'age' => $request->input('age'),
             'gender' => $request->input('gender'),
             'monthly_income' => $request->input('monthly_income'),
+            'kos' => $request->input('kos'),
+            'pernah_kos' => $request->input('pernah_kos'),
         ];
         
 

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('age')->nullable();
             $table->enum('gender', ['Laki-Laki', 'Perempuan'])->nullable();
             $table->string('monthly_income')->nullable();
+            $table->enum('kos', ['Iya', 'Tidak'])->nullable();
+            $table->enum('pernah_kos', ['Iya', 'Tidak'])->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('provinsi')->nullable();
             $table->string('kota')->nullable();

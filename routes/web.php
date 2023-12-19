@@ -26,18 +26,21 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::get('/electric', [ElectricController::class, 'index'])->name('electric.index');
-Route::post('/electric', [ElectricController::class, 'store'])->name('electric.store');
-Route::post('/electric/{id}', [ElectricController::class, 'show'])->name('electric.show');
-Route::post('/survey/edit/wat',  [ElectricController::class, 'editWatt'])->name('survey.edit.watt');
+Route::middleware(['auth', 'verified'])->group(function () {
+    // ElectricController routes
+    Route::get('/electric', [ElectricController::class, 'index'])->name('electric.index');
+    Route::post('/electric', [ElectricController::class, 'store'])->name('electric.store');
+    Route::post('/electric/{id}', [ElectricController::class, 'show'])->name('electric.show');
+    Route::post('/survey/edit/wat', [ElectricController::class, 'editWatt'])->name('survey.edit.watt');
+    Route::get('electric/data', [ElectricController::class, 'getData'])->name('electric.data');
+    Route::get('electric/ajax/data', [ElectricController::class, 'getDataElectric'])->name('electric.getDataElectric');
+    Route::put('/electrics/{id}/update-hemat', [ElectricController::class, 'updateHemat'])->name('electrics.update-hemat');
 
-Route::get('electric/data', [ElectricController::class, 'getData'])->name('electric.data');
-Route::get('electric/ajax/data', [ElectricController::class, 'getDataElectric'])->name('electric.getDataElectric');
-Route::put('/electrics/{id}/update-hemat', [ElectricController::class, 'updateHemat'])->name('electrics.update-hemat');
-
-Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
-Route::post('/survey', [SurveyController::class, 'storeSurvey'])->name('survey.store');
-Route::delete('/survey/{id}', [SurveyController::class, 'deleteSurvey'])->name('survey.delete');
+    // SurveyController routes
+    Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
+    Route::post('/survey', [SurveyController::class, 'storeSurvey'])->name('survey.store');
+    Route::delete('/survey/{id}', [SurveyController::class, 'deleteSurvey'])->name('survey.delete');
+});
 
 
 Route::middleware('auth')->group(function () {

@@ -31,6 +31,8 @@ class User extends Authenticatable
         'age',
         'gender',
         'monthly_income',
+        'kos',
+        'pernah_kos',
     ];
 
     /**

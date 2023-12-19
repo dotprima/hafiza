@@ -59,13 +59,40 @@
 
                                 <!-- Input Umur -->
                                 <div class="mb-3 col-md-6">
+                                    <label for="kos" class="form-label">Apakah Anda Pernah Ataupun Tinggal Terpisah
+                                        Dari Keluarga Baik Di Asrama Atau
+                                        Kost Atau Sejenisnya? </label>
+                                    <select class="select2 form-select" name="kos">
+                                        <option value="Iya" {{ $user->kos == 'Iya' ? 'selected' : '' }}>Iya
+                                        </option>
+                                        <option value="Tidak" {{ $user->kos == 'Tidak' ? 'selected' : '' }}>Tidak
+                                        </option>
+
+                                    </select>
+                                </div>
+
+                                <!-- Input Umur -->
+                                <div class="mb-3 col-md-6">
+                                    <label for="pernah_kos" class="form-label">Apakah Anda Pernah Ataupun Tinggal Terpisah Dari Keluarga Baik Di Asrama Atau
+                                        Kost Atau Sejenisnya?</label>
+                                    <select class="select2 form-select" name="pernah_kos">
+                                        <option value="Iya" {{ $user->pernah_kos == 'Iya' ? 'selected' : '' }}>Iya
+                                        </option>
+                                        <option value="Tidak" {{ $user->pernah_kos == 'Tidak' ? 'selected' : '' }}>Tidak
+                                        </option>
+
+                                    </select>
+                                </div>
+
+                                <!-- Input Umur -->
+                                <div class="mb-3 col-md-6">
                                     <label for="age" class="form-label">Umur</label>
                                     <select class="select2 form-select" name="age">
                                         <option value="15-24" {{ $user->age == '15-24' ? 'selected' : '' }}>15-24 Tahun
                                         </option>
                                         <option value="25-34" {{ $user->age == '25-34' ? 'selected' : '' }}>25-34 Tahun
                                         </option>
-                                        
+
                                     </select>
                                 </div>
 
@@ -77,7 +104,7 @@
                                             Laki-Laki</option>
                                         <option value="Perempuan" {{ $user->gender == 'Perempuan' ? 'selected' : '' }}>
                                             Perempuan</option>
-                                        
+
                                     </select>
                                 </div>
 
