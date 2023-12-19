@@ -15,6 +15,7 @@
                             <th>Merek</th>
                             <th>Kategori</th>
                             <th>Watt</th>
+                            <th>Hemat Energi</th>
                             <th>Created At</th>
                             <th>Status</th>
                         </tr>
@@ -124,30 +125,6 @@
 @endsection
 
 @section('css')
-    <!-- Vendors CSS -->
-    <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-    <link rel="stylesheet" href="../../assets/vendor/libs/node-waves/node-waves.css" />
-    <link rel="stylesheet" href="../../assets/vendor/libs/typeahead-js/typeahead.css" />
-    <link rel="stylesheet" href="../../assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
-    <link rel="stylesheet" href="../../assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
-    <link rel="stylesheet" href="../../assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
-    <link rel="stylesheet" href="../../assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
-    <link rel="stylesheet" href="../../assets/vendor/libs/flatpickr/flatpickr.css" />
-    <!-- Row Group CSS -->
-    <link rel="stylesheet" href="../../assets/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css" />
-    <!-- Form Validation -->
-    <link rel="stylesheet" href="../../assets/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
-
-    <!-- Page CSS -->
-
-    <!-- Helpers -->
-    <script src="../../assets/vendor/js/helpers.js"></script>
-
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
-    <script src="../../assets/vendor/js/template-customizer.js"></script>
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="../../assets/js/config.js"></script>
     <link rel="stylesheet" href="../../assets/vendor/libs/select2/select2.css" />
     <link rel="stylesheet" href="../../assets/vendor/libs/sweetalert2/sweetalert2.css" />
 @endsection
@@ -176,12 +153,61 @@
     <script src="../../assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
     <script src="../../assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
 
-    <!-- Main JS -->
-    <script src="../../assets/js/main.js"></script>
+
     <script src="../../assets/vendor/libs/select2/select2.js"></script>
     <script src="../../assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
     <!-- Page JS -->
     <script>
+        
+
+        function updateHemat(id) {
+            var confirmationText = (status != 1) ? 'Apakah Anda yakin ingin mematikan status Hemat?' :
+                'Apakah Anda yakin ingin menghidupkan status Hemat?';
+            // Show SweetAlert2 confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: confirmationText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Make an AJAX request to update the 'hemat' field
+                    $.ajax({
+                        url: `/electrics/${id}/update-hemat`,
+                        type: 'PUT',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+
+                        success: function(data) {
+                            // Show SweetAlert2 success message
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: data.message,
+                            }).then(function() {
+                                // Reload the page
+                                $('.datatables-basic').DataTable().ajax.reload();
+                                // Close the modal or perform any other actions
+                               
+                            });
+                        },
+                        error: function() {
+                            // Show SweetAlert2 error message
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'An error occurred while updating Hemat status',
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
         $(document).ready(function() {
             // Capture click event on the 'Save changes' button
             $('#saveChangesBtn').on('click', function() {
@@ -286,6 +312,18 @@
                             name: 'watt'
                         },
                         {
+                            data: 'hemat',
+                            name: 'hemat',
+                            render: function(data, type, row) {
+                                if (data === 1) {
+                                    return '<i class="fas fa-seedling"></i> Hemat Energi';
+                                } else {
+                                    return '';
+                                }
+                            }
+                        },
+
+                        {
                             data: 'created_at',
                             name: 'created_at',
                             render: function(data, type, row) {
@@ -389,8 +427,6 @@
         $(document).ready(function() {
             var kategori, merek, pemakaian, sku;
 
-
-
             function updateSkuOptions() {
                 // Panggil AJAX untuk mendapatkan data
                 $.ajax({
@@ -475,7 +511,9 @@
                         title: 'Success',
                         text: 'Survey answer created successfully!',
                     }).then(function() {
-                        location.reload();
+                        $('.datatables-basic').DataTable().ajax.reload();
+                        // Close the modal or perform any other actions
+                        $('#basicModal').modal('hide');
                     });
                 },
                 error: function(xhr) {

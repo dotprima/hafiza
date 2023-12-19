@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_merek');
             $table->unsignedBigInteger('id_kategori');
             $table->text('watt')->default(0);
+            $table->boolean('hemat')->default(false);
             $table->timestamps();
 
             // Definisi foreign keys

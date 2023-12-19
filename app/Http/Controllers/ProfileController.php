@@ -14,47 +14,73 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function index()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = auth()->user();
+
+
+        return view('profile.index', compact('user'));
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function updateProfile(Request $request)
     {
-        $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Validasi data yang diterima dari formulir
+        $request->validate([
+            'firstName' => 'required|string|max:255',
+            'totalWatt' => 'nullable|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'provinsi' => 'nullable|string|max:255',
+            'kota' => 'nullable|string|max:255',
+            'kecamatan' => 'nullable|string|max:255',
+            'desa' => 'nullable|string|max:255',
+        ]);
+
+        // Mendapatkan data pengguna saat ini
+        $user = auth()->user();
+
+        $tarifList = [
+            900 => 1352.00,
+            1300 => 1444.70,
+            3500 => 1699.53,
+            6600 => 1699.53,
+        ];
+        
+        // Mendapatkan nilai total_watt dari request
+        $totalWatt = $request->input('totalWatt');
+        
+        // Mencari tarif berdasarkan total_watt
+        $tarif = $tarifList[$totalWatt] ?? 'Tarif Tidak Ditemukan';
+        
+        // Array data untuk update
+        $userUpdateData = [
+            'name' => $request->input('firstName'),
+            'total_watt' => $totalWatt,
+            'email' => $request->input('email'),
+            'tarif' => $tarif,
+        ];
+        
+
+        // Check and update address fields only if they are not empty or null
+        if ($request->filled('provinsi')) {
+            $userUpdateData['provinsi'] = $request->input('provinsi');
         }
 
-        $request->user()->save();
+        if ($request->filled('kota')) {
+            $userUpdateData['kota'] = $request->input('kota');
+        }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
+        if ($request->filled('kecamatan')) {
+            $userUpdateData['kecamatan'] = $request->input('kecamatan');
+        }
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
+        if ($request->filled('desa')) {
+            $userUpdateData['desa'] = $request->input('desa');
+        }
 
-        $user = $request->user();
+        $user->update($userUpdateData);
 
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        // // Redirect ke halaman edit profil dengan pesan sukses
+        return redirect()->route('profile.edit')->with('success', 'Profile updated successfully');
     }
 }

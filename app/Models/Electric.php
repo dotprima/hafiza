@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Electric extends Model
 {
     use HasFactory;
-    protected $fillable = ['nama_electric', 'id_merek', 'id_kategori','watt'];
+    protected $fillable = ['nama_electric', 'id_merek', 'id_kategori','watt','hemat'];
 
     public function merek()
     {

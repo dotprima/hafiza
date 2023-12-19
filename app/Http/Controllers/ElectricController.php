@@ -20,6 +20,15 @@ class ElectricController extends Controller
         return view('electric', compact('category', 'merek'));
     }
 
+    public function updateHemat($id)
+    {
+        $electric = Electric::findOrFail($id);
+        $electric->hemat = !$electric->hemat; // Toggle the 'hemat' value
+        $electric->save();
+
+        return response()->json(['message' => 'Hemat status updated successfully']);
+    }
+
     public function editWatt(Request $request)
     {
         // Validate the request data if needed
@@ -69,7 +78,8 @@ class ElectricController extends Controller
                 return $electric->category ? $electric->category->nama_kategori : '';
             })
             ->addColumn('action', function (Electric $electric) {
-                return '<button type="button" class="btn btn-info waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#editModal" data-electric-id="' . $electric->id . '">Edit Watt</button>';
+                return '<button type="button" style="margin-right:10px" class="btn btn-info waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#editModal" data-electric-id="' . $electric->id . '">Edit Watt</button>' .
+                    '<button type="button" class="btn btn-primary waves-effect waves-light" onclick="updateHemat(' . $electric->id . ', ' . $electric->hemat . ')">Hemat Energi</button>';
             })
             ->make(true);
     }

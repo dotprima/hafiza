@@ -90,26 +90,49 @@
                         </div>
                     </div>
 
+                    @php
+                        if (!function_exists('hitungBiayaListrik')) {
+                            function hitungBiayaListrik($daya, $waktuPakai, $hargaPerKWh)
+                            {
+                                // Konversi daya dari Watt ke Kilowatt
+                                $dayaKWh = $daya / 1000;
+
+                                // Hitung konsumsi listrik dalam kWh
+                                $konsumsiListrik = $dayaKWh * $waktuPakai;
+
+                                // Hitung biaya listrik
+                                $biayaListrik = $konsumsiListrik * $hargaPerKWh;
+
+                                return $biayaListrik;
+                            }
+                        }
+                    @endphp
+
+
                     @foreach ($surveys as $survey)
                         <div class="card accordion-item">
                             <h2 class="accordion-header" id="headingDeliveryAddress">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseDeliveryAddress{{ $survey->id }}" aria-expanded="true"
                                     aria-controls="collapseDeliveryAddress{{ $survey->id }}">
-                                    {{ optional(optional($survey->electric)->category)->nama_kategori }}
+                                    {{ optional(optional($survey->electric)->category)->nama_kategori }} &nbsp;&nbsp;
+                                    {!! optional($survey->electric)->hemat ? '<i class="fas fa-seedling"></i>' : '' !!}
                                 </button>
                             </h2>
                             <div id="collapseDeliveryAddress{{ $survey->id }}" class="accordion-collapse collapse"
                                 aria-labelledby="headingDeliveryAddress" data-bs-parent="#collapsibleSection">
                                 <div class="accordion-body">
+                                    <h5 style="margin-left: 110px">Peralatan listrik Saya</h5>
                                     <div class="row g-3">
+
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <label class="col-sm-3 col-form-label text-sm-end"
                                                     for="collapsible-fullname">Merek</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" name="merek" class="form-control"
-                                                        value="{{ optional($survey->electric)->nama_electric }}" readonly />
+                                                        value="{{ optional($survey->electric)->merek->nama_merek }}"
+                                                        readonly />
                                                 </div>
                                             </div>
                                         </div>
@@ -120,7 +143,8 @@
                                                     for="collapsible-fullname">SKU</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" name="merek" class="form-control"
-                                                        value="{{ optional($survey->electric)->nama_electric }}" readonly />
+                                                        value="{{ optional($survey->electric)->nama_electric }}"
+                                                        readonly />
                                                 </div>
                                             </div>
                                         </div>
@@ -149,18 +173,131 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br>
-                                    <form id="deleteForm" action="{{ route('survey.delete', ['id' => $survey->id]) }}"
-                                        method="post">
-                                        @csrf
-                                        @method('DELETE')
 
-                                        <button type="button" class="dt-button create-new btn btn-danger"
-                                            onclick="confirmDelete()">
-                                            <i class="ti ti-plus me-sm-1"></i> Hapus
-                                            {{ optional(optional($survey->electric)->category)->nama_kategori }}
-                                        </button>
-                                    </form>
+                                </div>
+                                <hr>
+                                <div class="accordion-body">
+                                    <h5 style="margin-left: 110px">Rekomendasi Peralatan listrik <i
+                                            class="fas fa-seedling"></i></h5>
+                                    @php
+                                        $hemat = \App\Models\Electric::with('merek', 'category')
+                                            ->where('hemat', 1)
+                                            ->where('id_kategori', $survey->electric->id_kategori)
+                                            ->first();
+
+                                    @endphp
+
+                                    @if ($hemat)
+                                        <div class="row g-3">
+
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                    <label class="col-sm-3 col-form-label text-sm-end"
+                                                        for="collapsible-fullname">Merek</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="merek" class="form-control"
+                                                            value="{{ optional($hemat)->merek->nama_merek }}" readonly />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                    <label class="col-sm-3 col-form-label text-sm-end"
+                                                        for="collapsible-fullname">SKU</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="merek" class="form-control"
+                                                            value="{{ optional($hemat)->nama_electric }}" readonly />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                    <label class="col-sm-3 col-form-label text-sm-end"
+                                                        for="collapsible-fullname">Watt</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="merek" class="form-control"
+                                                            value="{{ optional($hemat)->watt }}" readonly />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        @php
+                                            $responden = hitungBiayaListrik($survey->electric->watt, $survey->pemakaian, auth()->user()->tarif);
+
+                                            $hemat_terus = hitungBiayaListrik($hemat->watt, $survey->pemakaian, auth()->user()->tarif);
+
+                                        @endphp
+                                        <hr>
+                                        <div class="row g-3">
+                                            <h5 style="margin-left: 110px">Perbandingan Listik</h5>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <label class="col-sm-3 col-form-label text-sm-end"
+                                                        for="collapsible-fullname">Biaya listrik Saya
+                                                        {{ $survey->electric->watt }}W / Hari</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="merek" class="form-control"
+                                                            value="{{ $responden }}" readonly />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <label class="col-sm-3 col-form-label text-sm-end"
+                                                        for="collapsible-fullname">Biaya listrik Rekomenasi
+                                                        {{ $hemat->watt }}W / Hari</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="merek" class="form-control"
+                                                            value="{{ $hemat_terus }}" readonly />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    @endif
+
+
+
+                                    <br>
+                                    <div class="row g-3">
+                                        <br>
+                                        <form id="deleteForm{{ $survey->id }}"
+                                            action="{{ route('survey.delete', ['id' => $survey->id]) }}" method="post">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="button" class="dt-button create-new btn btn-danger"
+                                                onclick="confirmDelete()">
+                                                <i class="ti ti-plus me-sm-1"></i> Hapus
+                                                {{ optional(optional($survey->electric)->category)->nama_kategori }}
+                                            </button>
+                                            <script>
+                                                function confirmDelete() {
+                                                    Swal.fire({
+                                                        title: 'Are you sure?',
+                                                        text: 'You will not be able to recover this survey!',
+                                                        icon: 'warning',
+                                                        showCancelButton: true,
+                                                        confirmButtonText: 'Yes, delete it!',
+                                                        cancelButtonText: 'Cancel',
+                                                        reverseButtons: true,
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            // Submit the form when confirmed
+                                                            document.getElementById('deleteForm{{ $survey->id }}').submit();
+                                                        }
+                                                    });
+                                                }
+                                            </script>
+                                        </form>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -202,6 +339,7 @@
                 })
             }), n.length && n.wrap('<div class="position-relative"></div>').select2({
                 tags: true,
+                minimumInputLength: 2,
                 dropdownParent: n.parent(),
                 templateResult: i,
                 templateSelection: i,
@@ -283,23 +421,6 @@
         });
     </script>
     <script>
-        function confirmDelete() {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'You will not be able to recover this survey!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel',
-                reverseButtons: true,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Submit the form when confirmed
-                    document.getElementById('deleteForm').submit();
-                }
-            });
-        }
-
         // Display success or error messages from the session
         @if (session('success'))
             Swal.fire('Success', '{{ session('success') }}', 'success');

@@ -33,6 +33,7 @@ Route::post('/survey/edit/wat',  [ElectricController::class, 'editWatt'])->name(
 
 Route::get('electric/data', [ElectricController::class, 'getData'])->name('electric.data');
 Route::get('electric/ajax/data', [ElectricController::class, 'getDataElectric'])->name('electric.getDataElectric');
+Route::put('/electrics/{id}/update-hemat', [ElectricController::class, 'updateHemat'])->name('electrics.update-hemat');
 
 Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
 Route::post('/survey', [SurveyController::class, 'storeSurvey'])->name('survey.store');
@@ -40,9 +41,9 @@ Route::delete('/survey/{id}', [SurveyController::class, 'deleteSurvey'])->name('
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.edit');
+    Route::post('/update-profile', [ProfileController::class, 'updateProfile'])->name('update.profile');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';

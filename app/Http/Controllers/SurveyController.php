@@ -38,7 +38,7 @@ class SurveyController extends Controller
             'merek' => 'required|not_in:Pilih',
         ]);
 
-        $electric = Electric::where('id_kategori', $request->SKU)->where('id_kategori', $request->kategori)->where('id_merek', $request->merek)->first();
+        $electric = Electric::where('id', $request->SKU)->where('id_kategori', $request->kategori)->where('id_merek', $request->merek)->first();
 
         if ($electric) {
             $request->merge(['electric_id' => $electric->id]);

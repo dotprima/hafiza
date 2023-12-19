@@ -22,6 +22,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'total_watt',
+        'provinsi',
+        'kota',
+        'kecamatan',
+        'desa',
+        'tarif'
     ];
 
     /**
