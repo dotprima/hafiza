@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\SurveyAnswer;
 use App\Models\Electric;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class SurveyController extends Controller
 {
@@ -31,6 +32,29 @@ class SurveyController extends Controller
 
     function storeSurvey(Request $request)
     {
+
+        // Assuming $userId is the ID of the user you want to check
+        $user = User::find(Auth::id());
+        
+        // Check if the relevant fields are not null or empty
+        if (
+            $user->total_watt == null || 
+            $user->tarif == null || 
+            $user->age == null || 
+            $user->gender == null || 
+            $user->monthly_income == null || 
+            $user->kos == null || 
+            $user->pernah_kos == null || 
+            $user->provinsi == null || 
+            $user->kota == null || 
+            $user->kecamatan == null || 
+            $user->desa == null
+        ) {
+            // User has filled out the form
+            return response()->json(['error' => 'Harap Mengisi Informasi Di Menu Profil'], 500);
+        }
+
+        
         $request->validate([
             'pemakaian' => 'required|integer',
             'SKU' => 'required',
@@ -90,9 +114,9 @@ class SurveyController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-                
 
-            
+
+
 
                 DB::table('survey_answers')->insert([
                     'electric_id' => $electrciId,

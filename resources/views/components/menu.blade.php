@@ -30,7 +30,7 @@
         <!-- Dashboards -->
         <li class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <a href="{{route('dashboard')}}" class="menu-link ">
-                <i class="menu-icon tf-icons ti ti-mail"></i>
+                <i class="menu-icon tf-icons ti ti-dashboard"></i>
                 <div>Dashboard</div>
             </a>
         </li>

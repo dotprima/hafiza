@@ -475,7 +475,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'An error occurred while submitting the survey answer.',
+                            text: 'Harap Mengisi Informasi Di Menu Profil.',
                         });
                     }
                 }
