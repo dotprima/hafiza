@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ElectricController;
 use App\Http\Controllers\SurveyController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,9 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     // ElectricController routes
     Route::get('/electric', [ElectricController::class, 'index'])->name('electric.index');
     Route::post('/electric', [ElectricController::class, 'store'])->name('electric.store');

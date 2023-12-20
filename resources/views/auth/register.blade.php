@@ -8,7 +8,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Register Basic - Pages | Vuexy - Bootstrap Admin Template</title>
+    <title>Register</title>
 
     <meta name="description" content="" />
 
@@ -81,13 +81,14 @@
                                             fill="#7367F0" />
                                     </svg>
                                 </span>
-                                <span class="app-brand-text demo text-body fw-bold ms-1">Vuexy</span>
+                                <span class="app-brand-text demo text-body fw-bold ms-1">Hafiza Aprillia</span>
                             </a>
                         </div>
                         <!-- /Logo -->
-                        <h4 class="mb-1 pt-2">Adventure starts here 🚀</h4>
-                        <p class="mb-4">Make your app management easy and fun!</p>
 
+                        <h4 class="mb-1 pt-2">Survey Penelitian Tesis Hafiza Aprillia 📚</h4>
+                        <p class="mb-4">Bantu kami dalam menyelesaikan penelitian tesis dengan mengisi survei ini.
+                            Terima kasih atas partisipasi Anda!</p>
                         <form class="auth-register-form mt-2" method="POST" action="{{ route('register') }}">
                             @csrf
                             <div class="mb-1">
@@ -144,7 +145,7 @@
                                     <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
                                 </div>
                             </div>
-                           
+
                             <button type="submit" class="btn btn-primary w-100" tabindex="5">Sign up</button>
                         </form>
 

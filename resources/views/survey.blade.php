@@ -91,6 +91,11 @@
                     </div>
 
                     @php
+                        $data = [];
+                        function formatRupiah($value)
+                        {
+                            return 'Rp.' . number_format($value, 2, ',', '.');
+                        }
                         if (!function_exists('hitungBiayaListrik')) {
                             function hitungBiayaListrik($daya, $waktuPakai, $hargaPerKWh)
                             {
@@ -258,6 +263,13 @@
                                             </div>
 
 
+                                            @php
+
+                                                $data_baru = ['listrik_responden' => $responden, 'listrik_rekomendasi' => $hemat_terus, 'kategori' => $survey->electric->category->nama_kategori];
+
+                                                array_push($data, $data_baru);
+
+                                            @endphp
                                         </div>
                                     @endif
 
@@ -302,8 +314,73 @@
                             </div>
                         </div>
                     @endforeach
+                    @php
+                        $totalResponden = 0;
+                        $totalRekomendasi = 0;
+                    @endphp
+                    <div class="row mt-3">
+                        {{ var_dump($data) }}
+                        @forelse ($data as $item)
+                            @php
+                                $totalResponden += $item['listrik_responden'];
+                                $totalRekomendasi += $item['listrik_rekomendasi'];
+                            @endphp
+                            <div class="col-md-6" style="padding-bottom:20px">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title">{{ $item['kategori'] }}</h5>
+                                                <p class="card-text">Biaya Listrik Saya <br> Per Hari
+                                                    {{ formatRupiah($item['listrik_responden']) }}</p>
+                                                <p class="card-text">Total Listrik Saya <br> Per 30 Hari
+                                                    {{ formatRupiah($item['listrik_rekomendasi'] * 30) }}</p>
+                                            </div>
+                                            <div class="col">
+                                                <h5 class="card-title">&nbsp;</h5>
+                                                <p class="card-text">Biaya Listrik Rekomendasi <br> Per Hari
+                                                    {{ formatRupiah($item['listrik_responden']) }}</p>
+                                                <p class="card-text">Total Listrik Rekomendasi <br> Per 30 Hari
+                                                    {{ formatRupiah($item['listrik_rekomendasi'] * 30) }}</p>
+                                            </div>
 
 
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-md-12">
+                                <p>No data available.</p>
+                            </div>
+                        @endforelse
+
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col" style="padding-bottom:20px">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title">Total Biaya Peralatan Listrik</h5>
+                                            <p class="card-text">Biaya Listrik Saya <br> Per Hari
+                                                {{ formatRupiah($totalResponden) }}</p>
+                                            <p class="card-text">Total Listrik Saya <br> Per 30 Hari
+                                                {{ formatRupiah($totalResponden * 30) }}</p>
+                                        </div>
+                                        <div class="col">
+                                            <h5 class="card-title">&nbsp;</h5>
+                                            <p class="card-text">Biaya Listrik Rekomendasi <br> Per Hari
+                                                {{ formatRupiah($totalResponden) }}</p>
+                                            <p class="card-text">Total Listrik Rekomendasi <br> Per 30 Hari
+                                                {{ formatRupiah($totalRekomendasi * 30) }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

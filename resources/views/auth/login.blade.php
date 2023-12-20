@@ -8,7 +8,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Login Basic - Pages | Vuexy - Bootstrap Admin Template</title>
+    <title>Login</title>
 
     <meta name="description" content="" />
 
@@ -81,12 +81,14 @@
                                             fill="#7367F0" />
                                     </svg>
                                 </span>
-                                <span class="app-brand-text demo text-body fw-bold ms-1">Vuexy</span>
+                                <span class="app-brand-text demo text-body fw-bold ms-1">Hafiza Aprillia</span>
                             </a>
                         </div>
                         <!-- /Logo -->
-                        <h4 class="mb-1 pt-2">Welcome to Vuexy! 👋</h4>
-                        <p class="mb-4">Please sign-in to your account and start the adventure</p>
+
+                        <h4 class="mb-1 pt-2">Survey Penelitian Tesis Hafiza Aprillia 📚</h4>
+                        <p class="mb-4">Bantu kami dalam menyelesaikan penelitian tesis dengan mengisi survei ini.
+                            Terima kasih atas partisipasi Anda!</p>
 
                         @if (session('status'))
                             <div class="alert alert-success mb-1 rounded-0" role="alert">
@@ -147,7 +149,7 @@
                             @endif
                         </p>
 
-                       
+
                     </div>
                 </div>
                 <!-- /Register -->
