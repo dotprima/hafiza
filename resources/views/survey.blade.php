@@ -319,7 +319,7 @@
                         $totalRekomendasi = 0;
                     @endphp
                     <div class="row mt-3">
-                        {{ var_dump($data) }}
+
                         @forelse ($data as $item)
                             @php
                                 $totalResponden += $item['listrik_responden'];
@@ -334,12 +334,12 @@
                                                 <p class="card-text">Biaya Listrik Saya <br> Per Hari
                                                     {{ formatRupiah($item['listrik_responden']) }}</p>
                                                 <p class="card-text">Total Listrik Saya <br> Per 30 Hari
-                                                    {{ formatRupiah($item['listrik_rekomendasi'] * 30) }}</p>
+                                                    {{ formatRupiah($item['listrik_responden'] * 30) }}</p>
                                             </div>
                                             <div class="col">
                                                 <h5 class="card-title">&nbsp;</h5>
                                                 <p class="card-text">Biaya Listrik Rekomendasi <br> Per Hari
-                                                    {{ formatRupiah($item['listrik_responden']) }}</p>
+                                                    {{ formatRupiah($item['listrik_rekomendasi']) }}</p>
                                                 <p class="card-text">Total Listrik Rekomendasi <br> Per 30 Hari
                                                     {{ formatRupiah($item['listrik_rekomendasi'] * 30) }}</p>
                                             </div>
@@ -372,9 +372,24 @@
                                         <div class="col">
                                             <h5 class="card-title">&nbsp;</h5>
                                             <p class="card-text">Biaya Listrik Rekomendasi <br> Per Hari
-                                                {{ formatRupiah($totalResponden) }}</p>
+                                                {{ formatRupiah($totalRekomendasi) }}</p>
                                             <p class="card-text">Total Listrik Rekomendasi <br> Per 30 Hari
                                                 {{ formatRupiah($totalRekomendasi * 30) }}</p>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col" style="text-align: center">
+                                            @php
+                                                $harian = intval($totalResponden - $totalRekomendasi);
+                                                $bulanan = intval($totalResponden-$totalRekomendasi)* 30;
+                                            @endphp
+                                            <h5 class="card-title">Anda Bisa Menghemat </h5>
+                                            <p class="card-text">Biaya Listrik Saya <br> Per Hari
+                                                {{ formatRupiah($harian) }}</p>
+                                            <p class="card-text">Total Listrik Saya <br> Per 30 Hari
+                                                {{ formatRupiah($bulanan) }}</p>
                                         </div>
                                     </div>
                                 </div>

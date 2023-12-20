@@ -1,11 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $data = [];
+
+        if (!function_exists('formatRupiah')) {
+            function formatRupiah($value)
+            {
+                return 'Rp.' . number_format($value, 2, ',', '.');
+            }
+        }
+        if (!function_exists('hitungBiayaListrik')) {
+            function hitungBiayaListrik($daya, $waktuPakai, $hargaPerKWh)
+            {
+                // Konversi daya dari Watt ke Kilowatt
+                $dayaKWh = $daya / 1000;
+
+                // Hitung konsumsi listrik dalam kWh
+                $konsumsiListrik = $dayaKWh * $waktuPakai;
+
+                // Hitung biaya listrik
+                $biayaListrik = $konsumsiListrik * $hargaPerKWh;
+
+                return $biayaListrik;
+            }
+        }
+    @endphp
     <div class="container-xxl flex-grow-1 container-p-y">
 
 
         <h4 class="py-3 mb-4">
-            <span class="text-muted fw-light">Charts /</span> Chart.js
+            <span class="text-muted fw-light">Dashboard Hemat Daya
         </h4>
 
         <div class="row">
@@ -13,26 +38,91 @@
 
             <!-- Line Charts -->
             @foreach ($surveys as $survey)
-                <div class="col-12 mb-4">
-                    <div class="card">
-                        <div class="card-header header-elements">
-                            <div>
-                                <h5 class="card-title mb-0">Statistics</h5>
-                                <small class="text-muted">Commercial networks and enterprises</small>
+                @php
+                    $hemat = \App\Models\Electric::with('merek', 'category')
+                        ->where('hemat', 1)
+                        ->where('id_kategori', $survey->electric->id_kategori)
+                        ->first();
+
+                @endphp
+
+                @if ($hemat)
+                    <div class="col-12 mb-4">
+                        <div class="card">
+                            <div class="card-header header-elements">
+                                <div>
+                                    <h5 class="card-title mb-0">
+                                        {{ optional(optional($survey->electric)->category)->nama_kategori }} &nbsp;&nbsp;
+                                        {!! optional($survey->electric)->hemat ? '<i class="fas fa-seedling"></i>' : '' !!}</h5>
+                                    <small class="text-muted">{{ optional($survey->electric)->merek->nama_merek }}</small>
+                                </div>
+                                @php
+                                    $responden = hitungBiayaListrik($survey->electric->watt, $survey->pemakaian, auth()->user()->tarif);
+
+                                    $hemat_terus = hitungBiayaListrik($hemat->watt, $survey->pemakaian, auth()->user()->tarif);
+
+                                    $responden_bulanan = $responden * 30;
+                                    $hemat_terus_bulanan = $hemat_terus * 30;
+
+                                    // Jumlah hari
+                                    $jumlah_hari = 30;
+
+                                    // Membuat array penggunaan listrik harian selama 30 hari
+                                    $penggunaan_harian_saya = [];
+                                    $penggunaan_harian_rekomendasi = [];
+
+                                    for ($i = 1; $i <= $jumlah_hari; $i++) {
+                                        $penggunaan_harian_saya[] = intval($responden * $i);
+                                        $penggunaan_harian_rekomendasi[] = intval($hemat_terus * $i);
+                                    }
+
+                                    // Menampilkan hasil
+                                    $dataListrikJSONsaya = json_encode($penggunaan_harian_saya);
+                                    $dataListrikJSONrekomendasi = json_encode($penggunaan_harian_rekomendasi);
+
+                                @endphp
+                                <div class="card-header-elements ms-auto py-0">
+                                    <h5 class="mb-0 me-3">Lebih Hemat</h5>
+                                    <span class="badge bg-label-secondary">
+                                        <i class='ti ti-arrow-up ti-xs text-success'></i>
+                                        <span
+                                            class="align-middle">{{ intval(($hemat_terus_bulanan / $responden_bulanan) * 100) }}%</span>
+                                    </span>
+                                </div>
                             </div>
-                            <div class="card-header-elements ms-auto py-0">
-                                <h5 class="mb-0 me-3">$ 78,000</h5>
-                                <span class="badge bg-label-secondary">
-                                    <i class='ti ti-arrow-up ti-xs text-success'></i>
-                                    <span class="align-middle">37%</span>
-                                </span>
+                            <div class="card-body pt-2">
+                                <canvas id="lineChart{{ $survey->id }}" class="chartjs" data-height="500"></canvas>
                             </div>
-                        </div>
-                        <div class="card-body pt-2">
-                            <canvas id="lineChart{{$survey->id}}" class="chartjs" data-height="500"></canvas>
+                            <div class="row mt-3">
+                                <div class="col" style="padding-bottom:20px">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col">
+
+                                                    <p class="card-text">Biaya Listrik Saya <br> Per Hari
+                                                        {{ formatRupiah(intval($responden)) }}</p>
+                                                    <p class="card-text">Total Listrik Saya <br> Per 30 Hari
+                                                        {{ formatRupiah(intval($responden_bulanan)) }}</p>
+                                                </div>
+                                                <div class="col">
+                                                    <h5 class="card-title">&nbsp;</h5>
+                                                    <p class="card-text">Biaya Listrik Rekomendasi <br> Per Hari
+                                                        {{ formatRupiah(intval($hemat_terus)) }}</p>
+                                                    <p class="card-text">Total Listrik Rekomendasi <br> Per 30 Hari
+                                                        {{ formatRupiah(intval($hemat_terus_bulanan)) }}</p>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             @endforeach
             <!-- /Line Charts -->
 
@@ -119,103 +209,110 @@
         borderColor = config.colors.borderColor;
     </script>
     @foreach ($surveys as $survey)
-        <script>
-            const lineChart{{$survey->id}} = document.getElementById('lineChart{{$survey->id}}');
-            if (lineChart{{$survey->id}}) {
-                const lineChart{{$survey->id}}Var = new Chart(lineChart{{$survey->id}}, {
-                    type: 'line',
-                    data: {
-                        labels: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140],
-                        datasets: [{
-                                data: [80, 150, 180, 270, 210, 160, 160, 202, 265, 210, 270, 255, 290, 360, 375],
-                                label: 'Listrik Saya',
-                                borderColor: configX.colors.danger,
-                                tension: 0.5,
-                                pointStyle: 'circle',
-                                backgroundColor: configX.colors.danger,
-                                fill: false,
-                                pointRadius: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBorderWidth: 5,
-                                pointBorderColor: 'transparent',
-                                pointHoverBorderColor: cardColor,
-                                pointHoverBackgroundColor: configX.colors.danger
-                            },
-                            {
-                                data: [80, 125, 105, 130, 215, 195, 140, 160, 230, 300, 220, 170, 210, 200, 280],
-                                label: 'Rekomenasi Pelaratan Listrik',
-                                borderColor: configX.colors.primary,
-                                tension: 0.5,
-                                pointStyle: 'circle',
-                                backgroundColor: configX.colors.primary,
-                                fill: false,
-                                pointRadius: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBorderWidth: 5,
-                                pointBorderColor: 'transparent',
-                                pointHoverBorderColor: cardColor,
-                                pointHoverBackgroundColor: configX.colors.primary
-                            },
+        @if ($hemat)
+            @php
+                $responden = hitungBiayaListrik($survey->electric->watt, $survey->pemakaian, auth()->user()->tarif);
+            @endphp
+            <script>
+                const lineChart{{ $survey->id }} = document.getElementById('lineChart{{ $survey->id }}');
+                if (lineChart{{ $survey->id }}) {
+                    const lineChart{{ $survey->id }}Var = new Chart(lineChart{{ $survey->id }}, {
+                        type: 'line',
+                        data: {
+                            labels: Array.from({
+                                length: 30
+                            }, (_, index) => (index + 1) * 1),
+                            datasets: [{
+                                    data: {{ $dataListrikJSONsaya }},
+                                    label: 'Listrik Saya',
+                                    borderColor: configX.colors.danger,
+                                    tension: 0.5,
+                                    pointStyle: 'circle',
+                                    backgroundColor: configX.colors.danger,
+                                    fill: false,
+                                    pointRadius: 1,
+                                    pointHoverRadius: 5,
+                                    pointHoverBorderWidth: 5,
+                                    pointBorderColor: 'transparent',
+                                    pointHoverBorderColor: cardColor,
+                                    pointHoverBackgroundColor: configX.colors.danger
+                                },
+                                {
+                                    data: {{ $dataListrikJSONrekomendasi }},
+                                    label: 'Rekomenasi Pelaratan Listrik',
+                                    borderColor: configX.colors.primary,
+                                    tension: 0.5,
+                                    pointStyle: 'circle',
+                                    backgroundColor: configX.colors.primary,
+                                    fill: false,
+                                    pointRadius: 1,
+                                    pointHoverRadius: 5,
+                                    pointHoverBorderWidth: 5,
+                                    pointBorderColor: 'transparent',
+                                    pointHoverBorderColor: cardColor,
+                                    pointHoverBackgroundColor: configX.colors.primary
+                                },
 
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            x: {
-                                grid: {
-                                    color: borderColor,
-                                    drawBorder: false,
-                                    borderColor: borderColor
-                                },
-                                ticks: {
-                                    color: labelColor
-                                }
-                            },
-                            y: {
-                                scaleLabel: {
-                                    display: true
-                                },
-                                min: 0,
-                                max: 400,
-                                ticks: {
-                                    color: labelColor,
-                                    stepSize: 100
-                                },
-                                grid: {
-                                    color: borderColor,
-                                    drawBorder: false,
-                                    borderColor: borderColor
-                                }
-                            }
+                            ]
                         },
-                        plugins: {
-                            tooltip: {
-                                // Updated default tooltip UI
-                                rtl: isRtl,
-                                backgroundColor: cardColor,
-                                titleColor: headingColor,
-                                bodyColor: legendColor,
-                                borderWidth: 1,
-                                borderColor: borderColor
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    grid: {
+                                        color: borderColor,
+                                        drawBorder: false,
+                                        borderColor: borderColor
+                                    },
+                                    ticks: {
+                                        color: labelColor
+                                    }
+                                },
+                                y: {
+                                    scaleLabel: {
+                                        display: true
+                                    },
+                                    min: 0,
+                                    max: {{$responden*30}},
+                                    ticks: {
+                                        color: labelColor,
+                                        stepSize: 100
+                                    },
+                                    grid: {
+                                        color: borderColor,
+                                        drawBorder: false,
+                                        borderColor: borderColor
+                                    }
+                                }
                             },
-                            legend: {
-                                position: 'top',
-                                align: 'start',
-                                rtl: isRtl,
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 35,
-                                    boxWidth: 6,
-                                    boxHeight: 6,
-                                    color: legendColor
+                            plugins: {
+                                tooltip: {
+                                    // Updated default tooltip UI
+                                    rtl: isRtl,
+                                    backgroundColor: cardColor,
+                                    titleColor: headingColor,
+                                    bodyColor: legendColor,
+                                    borderWidth: 1,
+                                    borderColor: borderColor
+                                },
+                                legend: {
+                                    position: 'top',
+                                    align: 'start',
+                                    rtl: isRtl,
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 35,
+                                        boxWidth: 6,
+                                        boxHeight: 6,
+                                        color: legendColor
+                                    }
                                 }
                             }
                         }
-                    }
-                });
-            }
-        </script>
+                    });
+                }
+            </script>
+        @endif
     @endforeach
 @endsection
